@@ -3,11 +3,14 @@ package br.com.apiusers.ui.controllers;
 import br.com.apiusers.data.UserEntity;
 import br.com.apiusers.shared.UserDto;
 import br.com.apiusers.ui.controllers.ui.model.CreateUserRequestModel;
+import br.com.apiusers.ui.controllers.ui.model.CreateUserResponseModel;
 import br.com.apiusers.ui.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,14 +31,16 @@ public class UsersController {
     }
 
     @PostMapping
-    public String createUser(@Valid @RequestBody CreateUserRequestModel userDetail){
+    public ResponseEntity<CreateUserResponseModel> createUser(@Valid @RequestBody CreateUserRequestModel userDetail){
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         UserDto userDto = modelMapper.map(userDetail, UserDto.class);
 
-        userService.createUser(userDto);
+        UserDto createdUser = userService.createUser(userDto);
 
-        return "create user";
+        CreateUserResponseModel returnValue = modelMapper.map(createdUser, CreateUserResponseModel.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }
 }
