@@ -28,7 +28,7 @@ public class UsersController {
 
     @GetMapping("/status/check")
     public String status() {
-        return "working on port " + env.getProperty("local.server.port");
+        return "working on port " + env.getProperty("local.server.port") + ", with token = " +env.getProperty("token.secret") +env.getProperty("token.expiration_time");
     }
 
     @PostMapping(
