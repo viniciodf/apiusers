@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByUserId(String userId) {
 
         UserEntity userEntity = userRepository.findByUserId(userId);
-        if(userEntity == null) throw new UsernameNotFoundException("User not foind");
+        if(userEntity == null) throw new UsernameNotFoundException("User not found");
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 

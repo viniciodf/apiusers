@@ -48,7 +48,7 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }
 
-    @GetMapping(
+    @GetMapping(value = "/{userId}",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
