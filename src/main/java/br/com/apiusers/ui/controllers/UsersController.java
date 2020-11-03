@@ -1,9 +1,9 @@
 package br.com.apiusers.ui.controllers;
 
-import br.com.apiusers.data.UserEntity;
 import br.com.apiusers.shared.UserDto;
 import br.com.apiusers.ui.controllers.ui.model.CreateUserRequestModel;
 import br.com.apiusers.ui.controllers.ui.model.CreateUserResponseModel;
+import br.com.apiusers.ui.controllers.ui.model.UserResponseModel;
 import br.com.apiusers.ui.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -44,6 +44,19 @@ public class UsersController {
         UserDto createdUser = userService.createUser(userDto);
 
         CreateUserResponseModel returnValue = modelMapper.map(createdUser, CreateUserResponseModel.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
+    }
+
+    @GetMapping(
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<UserResponseModel> getUser(@PathVariable("userId") String userId) {
+
+        UserDto userDto = userService.getUserByUserId(userId);
+
+        UserResponseModel returnValue = new ModelMapper().map(userDto, UserResponseModel.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(returnValue);
     }
