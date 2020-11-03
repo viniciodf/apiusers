@@ -88,7 +88,11 @@ public class UserServiceImpl implements UserService {
 //        ResponseEntity<List<AlbumResponseModel>> albumsListResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
 //        });
 //        List<AlbumResponseModel> albumsList = albumsListResponse.getBody();
+
+        logger.info("Before calling albums Microservice");
         List<AlbumResponseModel> albumsList = albumsServiceClient.getAlbums(userId);
+        logger.info("After calling albums Microservice");
+
         userDto.setAlbums(albumsList);
         return userDto;
     }
