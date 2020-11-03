@@ -1,5 +1,6 @@
 package br.com.apiusers.ui.service;
 
+import br.com.apiusers.data.AlbumsServiceClient;
 import br.com.apiusers.data.UserEntity;
 import br.com.apiusers.data.UserRepository;
 import br.com.apiusers.shared.UserDto;
@@ -7,10 +8,7 @@ import br.com.apiusers.ui.controllers.ui.model.AlbumResponseModel;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +34,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     Environment environment;
+
+    @Autowired
+    AlbumsServiceClient albumsServiceClient;
+
 
     @Override
     public UserDto createUser(UserDto userDetails) {
@@ -77,11 +79,13 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-        String albumsUrl = String.format(environment.getProperty("albums.url"), userId);
+//        String albumsUrl = String.format(environment.getProperty("albums.url"), userId);
+//
+//        ResponseEntity<List<AlbumResponseModel>> albumsListResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
+//        });
+//        List<AlbumResponseModel> albumsList = albumsListResponse.getBody();
 
-        ResponseEntity<List<AlbumResponseModel>> albumsListResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumResponseModel>>() {
-        });
-        List<AlbumResponseModel> albumsList = albumsListResponse.getBody();
+        List<AlbumResponseModel> albumsList = albumsServiceClient.getAlbums(userId);
         userDto.setAlbums(albumsList);
         return userDto;
     }
